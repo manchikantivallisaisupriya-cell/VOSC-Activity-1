@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Neon Tic-Tac-Toe Arena — VOSC Activity-1" />
+    <title>Neon Tic-Tac-Toe Arena</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+
+    <!-- ░░ CSS-only animated background particles ░░ -->
+    <div class="bg-particles" aria-hidden="true">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+
+    <!-- ░░ MAIN GAME CARD ░░ -->
+    <main class="arena-card" role="main">
+
+      <!-- Header -->
+      <header class="arena-header">
+        <h1 class="arena-title">
+          <span class="x-color">NEON</span>
+          <span class="white">TIC-TAC-TOE</span>
+          <span class="o-color">ARENA</span>
+        </h1>
+        <p class="arena-tagline">Two players · One board · No mercy</p>
+      </header>
+
+      <!-- Scoreboard -->
+      <section class="scoreboard" aria-label="Scoreboard">
+        <div class="score-block x-side" id="score-x-block">
+          <div class="player-label x-color">PLAYER X</div>
+          <div class="score-number" id="x-score" aria-label="Player X wins">0</div>
+          <div class="score-caption">WINS</div>
+        </div>
+
+        <div class="score-block draw-side">
+          <div class="player-label muted">DRAWS</div>
+          <div class="score-number" id="draw-score" aria-label="Draw count">0</div>
+          <div class="score-caption">TIES</div>
+        </div>
+
+        <div class="score-block o-side" id="score-o-block">
+          <div class="player-label o-color">PLAYER O</div>
+          <div class="score-number" id="o-score" aria-label="Player O wins">0</div>
+          <div class="score-caption">WINS</div>
+        </div>
+      </section>
+
+      <!-- Turn Indicator -->
+      <div class="turn-strip" id="turn-strip" aria-live="polite">
+        <span class="turn-dot" id="turn-dot"></span>
+        <span class="turn-text" id="turn-text">X's Turn</span>
+      </div>
+
+      <!-- Game Board -->
+      <section class="board-wrapper" aria-label="Game board">
+        <div class="board" id="board" role="grid">
+          <div class="cell" role="gridcell" tabindex="0" data-index="0" aria-label="Cell 1"></div>
+          <div class="cell" role="gridcell" tabindex="0" data-index="1" aria-label="Cell 2"></div>
+          <div class="cell" role="gridcell" tabindex="0" data-index="2" aria-label="Cell 3"></div>
+          <div class="cell" role="gridcell" tabindex="0" data-index="3" aria-label="Cell 4"></div>
+          <div class="cell" role="gridcell" tabindex="0" data-index="4" aria-label="Cell 5"></div>
+          <div class="cell" role="gridcell" tabindex="0" data-index="5" aria-label="Cell 6"></div>
+          <div class="cell" role="gridcell" tabindex="0" data-index="6" aria-label="Cell 7"></div>
+          <div class="cell" role="gridcell" tabindex="0" data-index="7" aria-label="Cell 8"></div>
+          <div class="cell" role="gridcell" tabindex="0" data-index="8" aria-label="Cell 9"></div>
+        </div>
+      </section>
+
+      <!-- Result Banner -->
+      <div class="result-banner hidden" id="result-banner" aria-live="assertive" role="alert">
+        <span id="result-text"></span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="btn-row">
+        <button class="btn btn-primary" id="new-round-btn" aria-label="Start a new round">
+          ⟳ NEW ROUND
+        </button>
+        <button class="btn btn-secondary" id="reset-score-btn" aria-label="Reset the scoreboard">
+          ✕ RESET SCORE
+        </button>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="arena-footer" aria-label="Footer">
+      Built with <span class="x-color">HTML</span> •
+      <span class="o-color">CSS</span> •
+      <span class="white">JavaScript</span>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>

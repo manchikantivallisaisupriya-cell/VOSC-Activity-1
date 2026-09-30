@@ -1,0 +1,522 @@
+/* ================================================================
+   NEON TIC-TAC-TOE ARENA  —  style.css
+   Sections:
+     1. CSS Variables & Reset
+     2. Background & Particles
+     3. Arena Card
+     4. Header
+     5. Scoreboard
+     6. Turn Strip
+     7. Game Board & Cells
+     8. Result Banner
+     9. Buttons
+    10. Footer
+    11. Animations (keyframes)
+    12. Responsive
+   ================================================================ */
+
+/* ----------------------------------------------------------------
+   1. CSS VARIABLES & RESET
+   ---------------------------------------------------------------- */
+:root {
+  --clr-bg:        #050a14;
+  --clr-card:      #0b1526;
+  --clr-card-edge: #0f2040;
+  --clr-x:         #00e5ff;   /* cyan  — Player X */
+  --clr-x-dim:     #007a8c;
+  --clr-o:         #ff3c78;   /* pink  — Player O */
+  --clr-o-dim:     #8c1540;
+  --clr-white:     #e8eaf6;
+  --clr-muted:     #4a5568;
+  --clr-draw:      #ffc857;
+  --clr-draw-dim:  #7a6020;
+  --board-gap:     10px;
+  --cell-radius:   14px;
+  --anim-fast:     0.18s;
+  --anim-mid:      0.35s;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: var(--clr-bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 16px 10px;
+  overflow-x: hidden;
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  color: var(--clr-white);
+}
+
+/* ----------------------------------------------------------------
+   2. CSS-ONLY ANIMATED BACKGROUND PARTICLES
+   ---------------------------------------------------------------- */
+.bg-particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.bg-particles span {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  opacity: 0;
+  animation: floatUp linear infinite;
+}
+
+/* Each particle gets unique size, position, timing */
+.bg-particles span:nth-child(1)  { width:6px;  height:6px;  left:10%; background:var(--clr-x);   animation-duration:14s; animation-delay:0s;   }
+.bg-particles span:nth-child(2)  { width:4px;  height:4px;  left:22%; background:var(--clr-o);   animation-duration:18s; animation-delay:2s;   }
+.bg-particles span:nth-child(3)  { width:8px;  height:8px;  left:35%; background:var(--clr-x);   animation-duration:12s; animation-delay:4s;   }
+.bg-particles span:nth-child(4)  { width:3px;  height:3px;  left:50%; background:var(--clr-draw); animation-duration:20s; animation-delay:1s;   }
+.bg-particles span:nth-child(5)  { width:5px;  height:5px;  left:65%; background:var(--clr-o);   animation-duration:16s; animation-delay:3s;   }
+.bg-particles span:nth-child(6)  { width:7px;  height:7px;  left:78%; background:var(--clr-x);   animation-duration:11s; animation-delay:5s;   }
+.bg-particles span:nth-child(7)  { width:4px;  height:4px;  left:88%; background:var(--clr-o);   animation-duration:17s; animation-delay:0.5s; }
+.bg-particles span:nth-child(8)  { width:6px;  height:6px;  left:5%;  background:var(--clr-draw); animation-duration:13s; animation-delay:6s;   }
+.bg-particles span:nth-child(9)  { width:3px;  height:3px;  left:42%; background:var(--clr-x);   animation-duration:19s; animation-delay:2.5s; }
+.bg-particles span:nth-child(10) { width:5px;  height:5px;  left:58%; background:var(--clr-o);   animation-duration:15s; animation-delay:7s;   }
+.bg-particles span:nth-child(11) { width:8px;  height:8px;  left:72%; background:var(--clr-x);   animation-duration:10s; animation-delay:1.5s; }
+.bg-particles span:nth-child(12) { width:4px;  height:4px;  left:92%; background:var(--clr-draw); animation-duration:22s; animation-delay:3.5s; }
+
+/* ----------------------------------------------------------------
+   3. ARENA CARD
+   ---------------------------------------------------------------- */
+.arena-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 480px;
+  background: var(--clr-card);
+  border: 1px solid var(--clr-card-edge);
+  border-radius: 24px;
+  padding: 36px 28px 32px;
+  box-shadow:
+    0 0 40px rgba(0, 229, 255, 0.07),
+    0 0 80px rgba(255, 60, 120, 0.05),
+    0 20px 60px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+
+/* ----------------------------------------------------------------
+   4. HEADER
+   ---------------------------------------------------------------- */
+.arena-header {
+  text-align: center;
+}
+
+.arena-title {
+  font-size: clamp(1.4rem, 5vw, 1.9rem);
+  font-weight: 900;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  line-height: 1.2;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.arena-tagline {
+  font-size: 0.78rem;
+  color: var(--clr-muted);
+  letter-spacing: 2px;
+  margin-top: 6px;
+  text-transform: uppercase;
+}
+
+/* Colour utility classes */
+.x-color  { color: var(--clr-x);     text-shadow: 0 0 10px var(--clr-x); }
+.o-color  { color: var(--clr-o);     text-shadow: 0 0 10px var(--clr-o); }
+.white    { color: var(--clr-white); }
+.muted    { color: var(--clr-muted); }
+
+/* ----------------------------------------------------------------
+   5. SCOREBOARD
+   ---------------------------------------------------------------- */
+.scoreboard {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+}
+
+.score-block {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  padding: 14px 8px;
+  text-align: center;
+  transition: border-color var(--anim-mid), box-shadow var(--anim-mid);
+}
+
+/* Highlight the active player's score card */
+.score-block.active {
+  border-color: currentColor;
+}
+
+.x-side.active {
+  border-color: var(--clr-x);
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.25);
+}
+
+.o-side.active {
+  border-color: var(--clr-o);
+  box-shadow: 0 0 18px rgba(255, 60, 120, 0.25);
+}
+
+.player-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.score-number {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--clr-white);
+  line-height: 1;
+}
+
+.score-caption {
+  font-size: 0.62rem;
+  color: var(--clr-muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* ----------------------------------------------------------------
+   6. TURN STRIP
+   ---------------------------------------------------------------- */
+.turn-strip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 50px;
+  padding: 10px 22px;
+  width: 100%;
+  justify-content: center;
+  transition: border-color var(--anim-mid), box-shadow var(--anim-mid);
+  min-height: 46px;
+}
+
+.turn-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--clr-x);
+  box-shadow: 0 0 8px var(--clr-x);
+  transition: background var(--anim-mid), box-shadow var(--anim-mid);
+  flex-shrink: 0;
+}
+
+.turn-dot.o-turn {
+  background: var(--clr-o);
+  box-shadow: 0 0 8px var(--clr-o);
+}
+
+.turn-text {
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--clr-white);
+}
+
+/* ----------------------------------------------------------------
+   7. GAME BOARD & CELLS
+   ---------------------------------------------------------------- */
+.board-wrapper {
+  width: 100%;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--board-gap);
+  /* Neon glow around the whole board */
+  padding: 12px;
+  background: rgba(0, 229, 255, 0.03);
+  border: 1px solid rgba(0, 229, 255, 0.12);
+  border-radius: 20px;
+  box-shadow:
+    0 0 30px rgba(0, 229, 255, 0.07),
+    inset 0 0 30px rgba(0, 229, 255, 0.03);
+}
+
+.cell {
+  aspect-ratio: 1 / 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: var(--cell-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.8rem, 8vw, 2.6rem);
+  font-weight: 900;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background var(--anim-fast),
+    border-color var(--anim-fast),
+    transform var(--anim-fast),
+    box-shadow var(--anim-fast);
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Hover — only empty, active cells */
+.cell:not(.taken):not(.board-locked):hover,
+.cell:not(.taken):not(.board-locked):focus-visible {
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(255,255,255,0.25);
+  transform: scale(1.06);
+  box-shadow: 0 0 16px rgba(255,255,255,0.08);
+}
+
+/* X cell */
+.cell.x {
+  color: var(--clr-x);
+  text-shadow: 0 0 14px var(--clr-x), 0 0 30px rgba(0,229,255,0.4);
+  border-color: var(--clr-x-dim);
+}
+
+/* O cell */
+.cell.o {
+  color: var(--clr-o);
+  text-shadow: 0 0 14px var(--clr-o), 0 0 30px rgba(255,60,120,0.4);
+  border-color: var(--clr-o-dim);
+}
+
+.cell.taken { cursor: default; }
+
+/* Winning cell — pulsing neon glow */
+.cell.win-x {
+  background: rgba(0, 229, 255, 0.12);
+  border-color: var(--clr-x);
+  box-shadow:
+    0 0 20px var(--clr-x),
+    0 0 40px rgba(0,229,255,0.35);
+  animation: winPulse 0.9s ease-in-out infinite alternate;
+}
+
+.cell.win-o {
+  background: rgba(255, 60, 120, 0.12);
+  border-color: var(--clr-o);
+  box-shadow:
+    0 0 20px var(--clr-o),
+    0 0 40px rgba(255,60,120,0.35);
+  animation: winPulse 0.9s ease-in-out infinite alternate;
+}
+
+/* Pop-in animation when a symbol is placed */
+.cell.pop {
+  animation: popIn 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Board locked visual feedback (dim on game over) */
+.board.locked .cell:not(.win-x):not(.win-o) {
+  opacity: 0.4;
+}
+
+/* ----------------------------------------------------------------
+   8. RESULT BANNER
+   ---------------------------------------------------------------- */
+.result-banner {
+  width: 100%;
+  text-align: center;
+  padding: 12px 20px;
+  border-radius: 14px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: all var(--anim-mid);
+}
+
+.result-banner.hidden {
+  display: none;
+}
+
+.result-banner.win-x-banner {
+  background: rgba(0, 229, 255, 0.1);
+  border: 1px solid var(--clr-x);
+  color: var(--clr-x);
+  text-shadow: 0 0 12px var(--clr-x);
+  animation: bannerIn var(--anim-mid) ease forwards, neonFlicker 2s ease 0.4s infinite;
+}
+
+.result-banner.win-o-banner {
+  background: rgba(255, 60, 120, 0.1);
+  border: 1px solid var(--clr-o);
+  color: var(--clr-o);
+  text-shadow: 0 0 12px var(--clr-o);
+  animation: bannerIn var(--anim-mid) ease forwards, neonFlicker 2s ease 0.4s infinite;
+}
+
+.result-banner.draw-banner {
+  background: rgba(255, 200, 87, 0.08);
+  border: 1px solid var(--clr-draw);
+  color: var(--clr-draw);
+  text-shadow: 0 0 10px var(--clr-draw);
+  animation: bannerIn var(--anim-mid) ease forwards, drawShake 0.5s ease 0.2s;
+}
+
+/* ----------------------------------------------------------------
+   9. BUTTONS
+   ---------------------------------------------------------------- */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 11px 26px;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  outline: none;
+  transition:
+    transform var(--anim-fast),
+    box-shadow var(--anim-fast),
+    background var(--anim-fast);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--clr-white);
+  outline-offset: 3px;
+}
+
+.btn:active { transform: scale(0.96); }
+
+/* Primary — New Round */
+.btn-primary {
+  background: linear-gradient(135deg, #007a8c, #00b4cc);
+  color: #050a14;
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.3);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #00b4cc, #00e5ff);
+  box-shadow: 0 0 28px rgba(0, 229, 255, 0.55);
+  transform: translateY(-2px);
+}
+
+/* Secondary — Reset Score */
+.btn-secondary {
+  background: rgba(255,255,255,0.07);
+  color: var(--clr-muted);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.13);
+  color: var(--clr-white);
+  border-color: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}
+
+/* ----------------------------------------------------------------
+   10. FOOTER
+   ---------------------------------------------------------------- */
+.arena-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 18px;
+  font-size: 0.72rem;
+  color: var(--clr-muted);
+  letter-spacing: 1.5px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+/* ----------------------------------------------------------------
+   11. KEYFRAME ANIMATIONS
+   ---------------------------------------------------------------- */
+
+/* Floating background particles */
+@keyframes floatUp {
+  0%   { transform: translateY(110vh) scale(1);   opacity: 0;   }
+  10%  { opacity: 0.6; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-10vh) scale(1.4); opacity: 0;   }
+}
+
+/* Symbol pop-in when placed */
+@keyframes popIn {
+  0%   { transform: scale(0.2) rotate(-20deg); opacity: 0; }
+  70%  { transform: scale(1.15) rotate(4deg);  opacity: 1; }
+  100% { transform: scale(1)    rotate(0deg);  opacity: 1; }
+}
+
+/* Winning cell pulse */
+@keyframes winPulse {
+  from { box-shadow: 0 0 14px currentColor, 0 0 28px rgba(255,255,255,0.1); }
+  to   { box-shadow: 0 0 28px currentColor, 0 0 56px rgba(255,255,255,0.2); }
+}
+
+/* Result banner slide-in */
+@keyframes bannerIn {
+  0%   { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0);    opacity: 1; }
+}
+
+/* Neon flicker for winner banner */
+@keyframes neonFlicker {
+  0%, 95%, 100% { opacity: 1; }
+  96%           { opacity: 0.7; }
+  97%           { opacity: 1; }
+  98%           { opacity: 0.5; }
+  99%           { opacity: 1; }
+}
+
+/* Draw banner shake */
+@keyframes drawShake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-6px); }
+  40%      { transform: translateX(6px); }
+  60%      { transform: translateX(-4px); }
+  80%      { transform: translateX(4px); }
+}
+
+/* ----------------------------------------------------------------
+   12. RESPONSIVE
+   ---------------------------------------------------------------- */
+@media (max-width: 400px) {
+  .arena-card     { padding: 26px 14px 24px; gap: 16px; }
+  .arena-title    { font-size: 1.2rem; gap: 6px; }
+  .score-number   { font-size: 1.6rem; }
+  .btn            { padding: 10px 18px; font-size: 0.78rem; letter-spacing: 1px; }
+  .player-label   { font-size: 0.6rem; }
+}
+
+@media (max-width: 360px) {
+  .btn-row        { flex-direction: column; }
+  .btn            { width: 100%; }
+}
